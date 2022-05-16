@@ -1,0 +1,61 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: balduvian <emmettglaser@gmail.com>
+Date: Mon, 16 May 2022 16:02:57 -0700
+Subject: [PATCH] uhc-publicBiomeGenerationSettings
+
+
+diff --git a/src/main/java/net/minecraft/world/level/biome/BiomeGenerationSettings.java b/src/main/java/net/minecraft/world/level/biome/BiomeGenerationSettings.java
+index 0a640e7961a13386f0d6f3ace7d5d5219bf9ac59..e1f13520c5b7908a1d15205c1461d2ac683528d8 100644
+--- a/src/main/java/net/minecraft/world/level/biome/BiomeGenerationSettings.java
++++ b/src/main/java/net/minecraft/world/level/biome/BiomeGenerationSettings.java
+@@ -28,21 +28,21 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+ import org.slf4j.Logger;
+ 
+ public class BiomeGenerationSettings {
+-    private static final Logger LOGGER = LogUtils.getLogger();
+-    public static final BiomeGenerationSettings EMPTY = new BiomeGenerationSettings(ImmutableMap.of(), ImmutableList.of());
+-    public static final MapCodec<BiomeGenerationSettings> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++    public static Logger LOGGER = LogUtils.getLogger();
++    public static BiomeGenerationSettings EMPTY = new BiomeGenerationSettings(ImmutableMap.of(), ImmutableList.of());
++    public static MapCodec<BiomeGenerationSettings> CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+         return instance.group(Codec.simpleMap(GenerationStep.Carving.CODEC, ConfiguredWorldCarver.LIST_CODEC.promotePartial(Util.prefix("Carver: ", LOGGER::error)), StringRepresentable.keys(GenerationStep.Carving.values())).fieldOf("carvers").forGetter((biomeGenerationSettings) -> {
+             return biomeGenerationSettings.carvers;
+         }), PlacedFeature.LIST_OF_LISTS_CODEC.promotePartial(Util.prefix("Features: ", LOGGER::error)).fieldOf("features").forGetter((biomeGenerationSettings) -> {
+             return biomeGenerationSettings.features;
+         })).apply(instance, BiomeGenerationSettings::new);
+     });
+-    private final Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers;
+-    private final List<HolderSet<PlacedFeature>> features;
+-    private final Supplier<List<ConfiguredFeature<?, ?>>> flowerFeatures;
+-    private final Supplier<Set<PlacedFeature>> featureSet;
+-
+-    BiomeGenerationSettings(Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers, List<HolderSet<PlacedFeature>> features) {
++    public Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers;
++    public List<HolderSet<PlacedFeature>> features;
++    public Supplier<List<ConfiguredFeature<?, ?>>> flowerFeatures;
++    public Supplier<Set<PlacedFeature>> featureSet;
++    
++    public BiomeGenerationSettings(Map<GenerationStep.Carving, HolderSet<ConfiguredWorldCarver<?>>> carvers, List<HolderSet<PlacedFeature>> features) {
+         this.carvers = carvers;
+         this.features = features;
+         this.flowerFeatures = Suppliers.memoize(() -> {
+@@ -72,8 +72,8 @@ public class BiomeGenerationSettings {
+     }
+ 
+     public static class Builder {
+-        private final Map<GenerationStep.Carving, List<Holder<ConfiguredWorldCarver<?>>>> carvers = Maps.newLinkedHashMap();
+-        private final List<List<Holder<PlacedFeature>>> features = Lists.newArrayList();
++        public Map<GenerationStep.Carving, List<Holder<ConfiguredWorldCarver<?>>>> carvers = Maps.newLinkedHashMap();
++        public List<List<Holder<PlacedFeature>>> features = Lists.newArrayList();
+ 
+         public BiomeGenerationSettings.Builder addFeature(GenerationStep.Decoration featureStep, Holder<PlacedFeature> feature) {
+             return this.addFeature(featureStep.ordinal(), feature);
+@@ -92,7 +92,7 @@ public class BiomeGenerationSettings {
+             return this;
+         }
+ 
+-        private void addFeatureStepsUpTo(int stepIndex) {
++        public void addFeatureStepsUpTo(int stepIndex) {
+             while(this.features.size() <= stepIndex) {
+                 this.features.add(Lists.newArrayList());
+             }

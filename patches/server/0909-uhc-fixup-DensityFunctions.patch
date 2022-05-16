@@ -1,0 +1,387 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: balduvian <emmettglaser@gmail.com>
+Date: Mon, 16 May 2022 16:15:52 -0700
+Subject: [PATCH] uhc-fixup-DensityFunctions
+
+
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/DensityFunctions.java b/src/main/java/net/minecraft/world/level/levelgen/DensityFunctions.java
+index e1fe4c62d023518409bec63947c71949eed44f54..6f70521108473d12a5abb7d8ceafb5e753eb4540 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/DensityFunctions.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/DensityFunctions.java
+@@ -26,11 +26,11 @@ import net.minecraft.world.level.levelgen.synth.NormalNoise;
+ import net.minecraft.world.level.levelgen.synth.SimplexNoise;
+ import org.slf4j.Logger;
+ 
+-public final class DensityFunctions {
+-    public static final Codec<DensityFunction> CODEC = Registry.DENSITY_FUNCTION_TYPES.byNameCodec().dispatch(DensityFunction::codec, Function.identity());
+-    public static final double MAX_REASONABLE_NOISE_VALUE = 1000000.0D;
+-    static final Codec<Double> NOISE_VALUE_CODEC = Codec.doubleRange(-1000000.0D, 1000000.0D);
+-    public static final Codec<DensityFunction> DIRECT_CODEC = Codec.either(NOISE_VALUE_CODEC, CODEC).xmap((either) -> {
++public class DensityFunctions {
++    public static Codec<DensityFunction> CODEC = Registry.DENSITY_FUNCTION_TYPES.byNameCodec().dispatch(DensityFunction::codec, Function.identity());
++    public static double MAX_REASONABLE_NOISE_VALUE = 1000000.0D;
++    static Codec<Double> NOISE_VALUE_CODEC = Codec.doubleRange(-1000000.0D, 1000000.0D);
++    public static Codec<DensityFunction> DIRECT_CODEC = Codec.either(NOISE_VALUE_CODEC, CODEC).xmap((either) -> {
+         return either.map(DensityFunctions::constant, Function.identity());
+     }, (densityFunction) -> {
+         if (densityFunction instanceof DensityFunctions.Constant) {
+@@ -307,7 +307,7 @@ public final class DensityFunctions {
+         }
+     }
+ 
+-    public static enum BeardifierMarker implements DensityFunctions.BeardifierOrMarker {
++    public enum BeardifierMarker implements DensityFunctions.BeardifierOrMarker {
+         INSTANCE;
+ 
+         @Override
+@@ -335,15 +335,15 @@ public final class DensityFunctions {
+         Codec<DensityFunction> CODEC = Codec.unit(DensityFunctions.BeardifierMarker.INSTANCE);
+ 
+         @Override
+-        public default Codec<? extends DensityFunction> codec() {
++        default Codec<? extends DensityFunction> codec() {
+             return CODEC;
+         }
+     }
+ 
+-    public static enum BlendAlpha implements DensityFunction.SimpleFunction {
++    public enum BlendAlpha implements DensityFunction.SimpleFunction {
+         INSTANCE;
+ 
+-        public static final Codec<DensityFunction> CODEC = Codec.unit(INSTANCE);
++        public static Codec<DensityFunction> CODEC = Codec.unit(INSTANCE);
+ 
+         @Override
+         public double compute(DensityFunction.FunctionContext pos) {
+@@ -372,7 +372,7 @@ public final class DensityFunctions {
+     }
+     
+     public static record BlendDensity(DensityFunction input) implements DensityFunctions.TransformerWithContext {
+-        public static final Codec<DensityFunctions.BlendDensity> CODEC = DensityFunctions.singleFunctionArgumentCodec(DensityFunctions.BlendDensity::new, DensityFunctions.BlendDensity::input);
++        public static Codec<DensityFunctions.BlendDensity> CODEC = DensityFunctions.singleFunctionArgumentCodec(DensityFunctions.BlendDensity::new, DensityFunctions.BlendDensity::input);
+ 
+         @Override
+         public double transform(DensityFunction.FunctionContext functionContext, double d) {
+@@ -400,10 +400,10 @@ public final class DensityFunctions {
+         }
+     }
+ 
+-    public static enum BlendOffset implements DensityFunction.SimpleFunction {
++    public enum BlendOffset implements DensityFunction.SimpleFunction {
+         INSTANCE;
+ 
+-        public static final Codec<DensityFunction> CODEC = Codec.unit(INSTANCE);
++        public static Codec<DensityFunction> CODEC = Codec.unit(INSTANCE);
+ 
+         @Override
+         public double compute(DensityFunction.FunctionContext pos) {
+@@ -432,10 +432,10 @@ public final class DensityFunctions {
+     }
+ 
+     public static record Clamp(DensityFunction input, double minValue, double maxValue) implements DensityFunctions.PureTransformer {
+-        public static final MapCodec<DensityFunctions.Clamp> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.Clamp> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(DensityFunction.DIRECT_CODEC.fieldOf("input").forGetter(DensityFunctions.Clamp::input), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("min").forGetter(DensityFunctions.Clamp::minValue), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("max").forGetter(DensityFunctions.Clamp::maxValue)).apply(instance, DensityFunctions.Clamp::new);
+         });
+-        public static final Codec<DensityFunctions.Clamp> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.Clamp> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         @Override
+         public double transform(double d) {
+@@ -454,8 +454,8 @@ public final class DensityFunctions {
+     }
+     
+     public static record Constant(double value) implements DensityFunction.SimpleFunction {
+-        public static final Codec<DensityFunctions.Constant> CODEC = DensityFunctions.singleArgumentCodec(DensityFunctions.NOISE_VALUE_CODEC, DensityFunctions.Constant::new, DensityFunctions.Constant::value);
+-        public static final DensityFunctions.Constant ZERO = new DensityFunctions.Constant(0.0D);
++        public static Codec<DensityFunctions.Constant> CODEC = DensityFunctions.singleArgumentCodec(DensityFunctions.NOISE_VALUE_CODEC, DensityFunctions.Constant::new, DensityFunctions.Constant::value);
++        public static DensityFunctions.Constant ZERO = new DensityFunctions.Constant(0.0D);
+ 
+         @Override
+         public double compute(DensityFunction.FunctionContext pos) {
+@@ -483,9 +483,9 @@ public final class DensityFunctions {
+         }
+     }
+ 
+-    public static final class EndIslandDensityFunction implements DensityFunction.SimpleFunction {
+-        public static final Codec<DensityFunctions.EndIslandDensityFunction> CODEC = Codec.unit(new DensityFunctions.EndIslandDensityFunction(0L));
+-        public final SimplexNoise islandNoise;
++    public static class EndIslandDensityFunction implements DensityFunction.SimpleFunction {
++        public static Codec<DensityFunctions.EndIslandDensityFunction> CODEC = Codec.unit(new DensityFunctions.EndIslandDensityFunction(0L));
++        public SimplexNoise islandNoise;
+ 
+         public EndIslandDensityFunction(long seed) {
+             RandomSource randomSource = new LegacyRandomSource(seed);
+@@ -598,7 +598,7 @@ public final class DensityFunctions {
+             return this.type.codec;
+         }
+     
+-        public static enum Type implements StringRepresentable {
++        public enum Type implements StringRepresentable {
+             ABS("abs"),
+             SQUARE("square"),
+             CUBE("cube"),
+@@ -606,8 +606,8 @@ public final class DensityFunctions {
+             QUARTER_NEGATIVE("quarter_negative"),
+             SQUEEZE("squeeze");
+ 
+-            public final String name;
+-            final Codec<DensityFunctions.Mapped> codec = DensityFunctions.singleFunctionArgumentCodec((densityFunction) -> {
++            public String name;
++            Codec<DensityFunctions.Mapped> codec = DensityFunctions.singleFunctionArgumentCodec((densityFunction) -> {
+                 return DensityFunctions.Mapped.create(this, densityFunction);
+             }, DensityFunctions.Mapped::input);
+ 
+@@ -648,15 +648,15 @@ public final class DensityFunctions {
+             return this.wrapped.maxValue();
+         }
+     
+-        public static enum Type implements StringRepresentable {
++        public enum Type implements StringRepresentable {
+             Interpolated("interpolated"),
+             FlatCache("flat_cache"),
+             Cache2D("cache_2d"),
+             CacheOnce("cache_once"),
+             CacheAllInCell("cache_all_in_cell");
+ 
+-            public final String name;
+-            final Codec<DensityFunctions.MarkerOrMarked> codec = DensityFunctions.singleFunctionArgumentCodec((densityFunction) -> {
++            public String name;
++            Codec<DensityFunctions.MarkerOrMarked> codec = DensityFunctions.singleFunctionArgumentCodec((densityFunction) -> {
+                 return new DensityFunctions.Marker(this, densityFunction);
+             }, DensityFunctions.MarkerOrMarked::wrapped);
+ 
+@@ -736,17 +736,17 @@ public final class DensityFunctions {
+             return new DensityFunctions.MulOrAdd(this.specificType, densityFunction, f, g, this.argument);
+         }
+     
+-        public static enum Type {
++        public enum Type {
+             MUL,
+             ADD;
+         }
+     }
+ 
+     public static record Noise(Holder<NormalNoise.NoiseParameters> noiseData, @Nullable NormalNoise noise, double xzScale, double yScale) implements DensityFunction.SimpleFunction {
+-        public static final MapCodec<DensityFunctions.Noise> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.Noise> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(NormalNoise.NoiseParameters.CODEC.fieldOf("noise").forGetter(DensityFunctions.Noise::noiseData), Codec.DOUBLE.fieldOf("xz_scale").forGetter(DensityFunctions.Noise::xzScale), Codec.DOUBLE.fieldOf("y_scale").forGetter(DensityFunctions.Noise::yScale)).apply(instance, DensityFunctions.Noise::createUnseeded);
+         });
+-        public static final Codec<DensityFunctions.Noise> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.Noise> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         public static DensityFunctions.Noise createUnseeded(Holder<NormalNoise.NoiseParameters> noiseData, @Deprecated double xzScale, double yScale) {
+             return new DensityFunctions.Noise(noiseData, (NormalNoise)null, xzScale, yScale);
+@@ -795,10 +795,10 @@ public final class DensityFunctions {
+     }
+     
+     public static record RangeChoice(DensityFunction input, double minInclusive, double maxExclusive, DensityFunction whenInRange, DensityFunction whenOutOfRange) implements DensityFunction {
+-        public static final MapCodec<DensityFunctions.RangeChoice> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.RangeChoice> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(DensityFunction.HOLDER_HELPER_CODEC.fieldOf("input").forGetter(DensityFunctions.RangeChoice::input), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("min_inclusive").forGetter(DensityFunctions.RangeChoice::minInclusive), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("max_exclusive").forGetter(DensityFunctions.RangeChoice::maxExclusive), DensityFunction.HOLDER_HELPER_CODEC.fieldOf("when_in_range").forGetter(DensityFunctions.RangeChoice::whenInRange), DensityFunction.HOLDER_HELPER_CODEC.fieldOf("when_out_of_range").forGetter(DensityFunctions.RangeChoice::whenOutOfRange)).apply(instance, DensityFunctions.RangeChoice::new);
+         });
+-        public static final Codec<DensityFunctions.RangeChoice> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.RangeChoice> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         @Override
+         public double compute(DensityFunction.FunctionContext pos) {
+@@ -843,7 +843,7 @@ public final class DensityFunctions {
+     }
+     
+     public static record Shift(Holder<NormalNoise.NoiseParameters> noiseData, @Nullable NormalNoise offsetNoise) implements DensityFunctions.ShiftNoise {
+-        public static final Codec<DensityFunctions.Shift> CODEC = DensityFunctions.singleArgumentCodec(NormalNoise.NoiseParameters.CODEC, (holder) -> {
++        public static Codec<DensityFunctions.Shift> CODEC = DensityFunctions.singleArgumentCodec(NormalNoise.NoiseParameters.CODEC, (holder) -> {
+             return new DensityFunctions.Shift(holder, (NormalNoise)null);
+         }, DensityFunctions.Shift::noiseData);
+ 
+@@ -864,7 +864,7 @@ public final class DensityFunctions {
+     }
+     
+     public static record ShiftA(Holder<NormalNoise.NoiseParameters> noiseData, @Nullable NormalNoise offsetNoise) implements DensityFunctions.ShiftNoise {
+-        public static final Codec<DensityFunctions.ShiftA> CODEC = DensityFunctions.singleArgumentCodec(NormalNoise.NoiseParameters.CODEC, (holder) -> {
++        public static Codec<DensityFunctions.ShiftA> CODEC = DensityFunctions.singleArgumentCodec(NormalNoise.NoiseParameters.CODEC, (holder) -> {
+             return new DensityFunctions.ShiftA(holder, (NormalNoise)null);
+         }, DensityFunctions.ShiftA::noiseData);
+ 
+@@ -885,7 +885,7 @@ public final class DensityFunctions {
+     }
+ 
+     public static record ShiftB(Holder<NormalNoise.NoiseParameters> noiseData, @Nullable NormalNoise offsetNoise) implements DensityFunctions.ShiftNoise {
+-        public static final Codec<DensityFunctions.ShiftB> CODEC = DensityFunctions.singleArgumentCodec(NormalNoise.NoiseParameters.CODEC, (holder) -> {
++        public static Codec<DensityFunctions.ShiftB> CODEC = DensityFunctions.singleArgumentCodec(NormalNoise.NoiseParameters.CODEC, (holder) -> {
+             return new DensityFunctions.ShiftB(holder, (NormalNoise)null);
+         }, DensityFunctions.ShiftB::noiseData);
+ 
+@@ -931,10 +931,10 @@ public final class DensityFunctions {
+     }
+ 
+     public static record ShiftedNoise(DensityFunction shiftX, DensityFunction shiftY, DensityFunction shiftZ, double xzScale, double yScale, Holder<NormalNoise.NoiseParameters> noiseData, @Nullable NormalNoise noise) implements DensityFunction {
+-        public static final MapCodec<DensityFunctions.ShiftedNoise> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.ShiftedNoise> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(DensityFunction.HOLDER_HELPER_CODEC.fieldOf("shift_x").forGetter(DensityFunctions.ShiftedNoise::shiftX), DensityFunction.HOLDER_HELPER_CODEC.fieldOf("shift_y").forGetter(DensityFunctions.ShiftedNoise::shiftY), DensityFunction.HOLDER_HELPER_CODEC.fieldOf("shift_z").forGetter(DensityFunctions.ShiftedNoise::shiftZ), Codec.DOUBLE.fieldOf("xz_scale").forGetter(DensityFunctions.ShiftedNoise::xzScale), Codec.DOUBLE.fieldOf("y_scale").forGetter(DensityFunctions.ShiftedNoise::yScale), NormalNoise.NoiseParameters.CODEC.fieldOf("noise").forGetter(DensityFunctions.ShiftedNoise::noiseData)).apply(instance, DensityFunctions.ShiftedNoise::createUnseeded);
+         });
+-        public static final Codec<DensityFunctions.ShiftedNoise> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.ShiftedNoise> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         public static DensityFunctions.ShiftedNoise createUnseeded(DensityFunction shiftX, DensityFunction shiftY, DensityFunction shiftZ, double xzScale, double yScale, Holder<NormalNoise.NoiseParameters> noiseData) {
+             return new DensityFunctions.ShiftedNoise(shiftX, shiftY, shiftZ, xzScale, yScale, noiseData, (NormalNoise)null);
+@@ -979,7 +979,7 @@ public final class DensityFunctions {
+     }
+ 
+     public static record Slide(@Nullable NoiseSettings settings, DensityFunction input) implements DensityFunctions.TransformerWithContext {
+-        public static final Codec<DensityFunctions.Slide> CODEC = DensityFunctions.singleFunctionArgumentCodec((densityFunction) -> {
++        public static Codec<DensityFunctions.Slide> CODEC = DensityFunctions.singleFunctionArgumentCodec((densityFunction) -> {
+             return new DensityFunctions.Slide((NoiseSettings)null, densityFunction);
+         }, DensityFunctions.Slide::input);
+ 
+@@ -1010,10 +1010,10 @@ public final class DensityFunctions {
+     }
+ 
+     public static record Spline(CubicSpline<TerrainShaper.PointCustom> spline, double minValue, double maxValue) implements DensityFunction {
+-        public static final MapCodec<DensityFunctions.Spline> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.Spline> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(TerrainShaper.SPLINE_CUSTOM_CODEC.fieldOf("spline").forGetter(DensityFunctions.Spline::spline), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("min_value").forGetter(DensityFunctions.Spline::minValue), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("max_value").forGetter(DensityFunctions.Spline::maxValue)).apply(instance, DensityFunctions.Spline::new);
+         });
+-        public static final Codec<DensityFunctions.Spline> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.Spline> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         @Override
+         public double compute(DensityFunction.FunctionContext pos) {
+@@ -1049,10 +1049,10 @@ public final class DensityFunctions {
+     /** @deprecated */
+     @Deprecated
+     public static record TerrainShaperSpline(DensityFunction continentalness, DensityFunction erosion, DensityFunction weirdness, @Nullable TerrainShaper shaper, DensityFunctions.TerrainShaperSpline.SplineType spline, double minValue, double maxValue) implements DensityFunction {
+-        public static final MapCodec<DensityFunctions.TerrainShaperSpline> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.TerrainShaperSpline> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(DensityFunction.HOLDER_HELPER_CODEC.fieldOf("continentalness").forGetter(DensityFunctions.TerrainShaperSpline::continentalness), DensityFunction.HOLDER_HELPER_CODEC.fieldOf("erosion").forGetter(DensityFunctions.TerrainShaperSpline::erosion), DensityFunction.HOLDER_HELPER_CODEC.fieldOf("weirdness").forGetter(DensityFunctions.TerrainShaperSpline::weirdness), DensityFunctions.TerrainShaperSpline.SplineType.CODEC.fieldOf("spline").forGetter(DensityFunctions.TerrainShaperSpline::spline), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("min_value").forGetter(DensityFunctions.TerrainShaperSpline::minValue), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("max_value").forGetter(DensityFunctions.TerrainShaperSpline::maxValue)).apply(instance, DensityFunctions.TerrainShaperSpline::createUnseeded);
+         });
+-        public static final Codec<DensityFunctions.TerrainShaperSpline> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.TerrainShaperSpline> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         public static DensityFunctions.TerrainShaperSpline createUnseeded(DensityFunction densityFunction, DensityFunction densityFunction2, DensityFunction densityFunction3, DensityFunctions.TerrainShaperSpline.SplineType splineType, double d, double e) {
+             return new DensityFunctions.TerrainShaperSpline(densityFunction, densityFunction2, densityFunction3, (TerrainShaper)null, splineType, d, e);
+@@ -1085,17 +1085,17 @@ public final class DensityFunctions {
+             float apply(TerrainShaper terrainShaper, TerrainShaper.Point point);
+         }
+ 
+-        public static enum SplineType implements StringRepresentable {
++        public enum SplineType implements StringRepresentable {
+             OFFSET("offset", TerrainShaper::offset),
+             FACTOR("factor", TerrainShaper::factor),
+             JAGGEDNESS("jaggedness", TerrainShaper::jaggedness);
+ 
+-            public static final Map<String, DensityFunctions.TerrainShaperSpline.SplineType> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(DensityFunctions.TerrainShaperSpline.SplineType::getSerializedName, (splineType) -> {
++            public static Map<String, DensityFunctions.TerrainShaperSpline.SplineType> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(DensityFunctions.TerrainShaperSpline.SplineType::getSerializedName, (splineType) -> {
+                 return splineType;
+             }));
+-            public static final Codec<DensityFunctions.TerrainShaperSpline.SplineType> CODEC = StringRepresentable.fromEnum(DensityFunctions.TerrainShaperSpline.SplineType::values, BY_NAME::get);
+-            public final String name;
+-            final DensityFunctions.TerrainShaperSpline.Spline spline;
++            public static Codec<DensityFunctions.TerrainShaperSpline.SplineType> CODEC = StringRepresentable.fromEnum(DensityFunctions.TerrainShaperSpline.SplineType::values, BY_NAME::get);
++            public String name;
++            DensityFunctions.TerrainShaperSpline.Spline spline;
+ 
+             SplineType(String name, DensityFunctions.TerrainShaperSpline.Spline spline) {
+                 this.name = name;
+@@ -1132,7 +1132,7 @@ public final class DensityFunctions {
+     
+     public interface TwoArgumentSimpleFunction extends DensityFunction {
+         Logger LOGGER = LogUtils.getLogger();
+-
++    
+         static DensityFunctions.TwoArgumentSimpleFunction create(DensityFunctions.TwoArgumentSimpleFunction.Type type, DensityFunction argument1, DensityFunction argument2) {
+             double d = argument1.minValue();
+             double e = argument2.minValue();
+@@ -1197,11 +1197,11 @@ public final class DensityFunctions {
+ 
+             return new DensityFunctions.Ap2(type, argument1, argument2, h, i);
+         }
+-
++    
+         DensityFunctions.TwoArgumentSimpleFunction.Type type();
+-
++    
+         DensityFunction argument1();
+-
++    
+         DensityFunction argument2();
+ 
+         @Override
+@@ -1209,16 +1209,16 @@ public final class DensityFunctions {
+             return this.type().codec;
+         }
+ 
+-        public static enum Type implements StringRepresentable {
++        enum Type implements StringRepresentable {
+             ADD("add"),
+             MUL("mul"),
+             MIN("min"),
+             MAX("max");
+-
+-            final Codec<DensityFunctions.TwoArgumentSimpleFunction> codec = DensityFunctions.doubleFunctionArgumentCodec((densityFunction, densityFunction2) -> {
++    
++            public Codec<DensityFunctions.TwoArgumentSimpleFunction> codec = DensityFunctions.doubleFunctionArgumentCodec((densityFunction, densityFunction2) -> {
+                 return DensityFunctions.TwoArgumentSimpleFunction.create(this, densityFunction, densityFunction2);
+             }, DensityFunctions.TwoArgumentSimpleFunction::argument1, DensityFunctions.TwoArgumentSimpleFunction::argument2);
+-            public final String name;
++            public String name;
+ 
+             Type(String name) {
+                 this.name = name;
+@@ -1232,10 +1232,10 @@ public final class DensityFunctions {
+     }
+ 
+     public static record WeirdScaledSampler(DensityFunction input, Holder<NormalNoise.NoiseParameters> noiseData, @Nullable NormalNoise noise, DensityFunctions.WeirdScaledSampler.RarityValueMapper rarityValueMapper) implements DensityFunctions.TransformerWithContext {
+-        public static final MapCodec<DensityFunctions.WeirdScaledSampler> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.WeirdScaledSampler> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(DensityFunction.HOLDER_HELPER_CODEC.fieldOf("input").forGetter(DensityFunctions.WeirdScaledSampler::input), NormalNoise.NoiseParameters.CODEC.fieldOf("noise").forGetter(DensityFunctions.WeirdScaledSampler::noiseData), DensityFunctions.WeirdScaledSampler.RarityValueMapper.CODEC.fieldOf("rarity_value_mapper").forGetter(DensityFunctions.WeirdScaledSampler::rarityValueMapper)).apply(instance, DensityFunctions.WeirdScaledSampler::createUnseeded);
+         });
+-        public static final Codec<DensityFunctions.WeirdScaledSampler> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.WeirdScaledSampler> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         public static DensityFunctions.WeirdScaledSampler createUnseeded(DensityFunction input, Holder<NormalNoise.NoiseParameters> noiseData, DensityFunctions.WeirdScaledSampler.RarityValueMapper rarityValueMapper) {
+             return new DensityFunctions.WeirdScaledSampler(input, noiseData, (NormalNoise)null, rarityValueMapper);
+@@ -1274,15 +1274,23 @@ public final class DensityFunctions {
+ 
+         public static enum RarityValueMapper implements StringRepresentable {
+             TYPE1("type_1", NoiseRouterData.QuantizedSpaghettiRarity::getSpaghettiRarity3D, 2.0D),
+-            TYPE2("type_2", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D);
+-
+-            public static final Map<String, DensityFunctions.WeirdScaledSampler.RarityValueMapper> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(DensityFunctions.WeirdScaledSampler.RarityValueMapper::getSerializedName, (rarityValueMapper) -> {
++            TYPE2("type_2", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM0("custom_0", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM1("custom_1", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM2("custom_2", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM3("custom_3", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM4("custom_4", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM5("custom_5", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM6("custom_6", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D),
++            CUSTOM7("custom_7", NoiseRouterData.QuantizedSpaghettiRarity::getSphaghettiRarity2D, 3.0D);
++            
++            public static Map<String, DensityFunctions.WeirdScaledSampler.RarityValueMapper> BY_NAME = Arrays.stream(values()).collect(Collectors.toMap(DensityFunctions.WeirdScaledSampler.RarityValueMapper::getSerializedName, (rarityValueMapper) -> {
+                 return rarityValueMapper;
+             }));
+-            public static final Codec<DensityFunctions.WeirdScaledSampler.RarityValueMapper> CODEC = StringRepresentable.fromEnum(DensityFunctions.WeirdScaledSampler.RarityValueMapper::values, BY_NAME::get);
+-            public final String name;
+-            final Double2DoubleFunction mapper;
+-            final double maxRarity;
++            public static Codec<DensityFunctions.WeirdScaledSampler.RarityValueMapper> CODEC = StringRepresentable.fromEnum(DensityFunctions.WeirdScaledSampler.RarityValueMapper::values, BY_NAME::get);
++            public String name;
++            public Double2DoubleFunction mapper;
++            public double maxRarity;
+ 
+             RarityValueMapper(String name, Double2DoubleFunction scaleFunction, double d) {
+                 this.name = name;
+@@ -1298,10 +1306,10 @@ public final class DensityFunctions {
+     }
+     
+     public static record YClampedGradient(int fromY, int toY, double fromValue, double toValue) implements DensityFunction.SimpleFunction {
+-        public static final MapCodec<DensityFunctions.YClampedGradient> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
++        public static MapCodec<DensityFunctions.YClampedGradient> DATA_CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+             return instance.group(Codec.intRange(DimensionType.MIN_Y * 2, DimensionType.MAX_Y * 2).fieldOf("from_y").forGetter(DensityFunctions.YClampedGradient::fromY), Codec.intRange(DimensionType.MIN_Y * 2, DimensionType.MAX_Y * 2).fieldOf("to_y").forGetter(DensityFunctions.YClampedGradient::toY), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("from_value").forGetter(DensityFunctions.YClampedGradient::fromValue), DensityFunctions.NOISE_VALUE_CODEC.fieldOf("to_value").forGetter(DensityFunctions.YClampedGradient::toValue)).apply(instance, DensityFunctions.YClampedGradient::new);
+         });
+-        public static final Codec<DensityFunctions.YClampedGradient> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
++        public static Codec<DensityFunctions.YClampedGradient> CODEC = DensityFunctions.makeCodec(DATA_CODEC);
+ 
+         @Override
+         public double compute(DensityFunction.FunctionContext pos) {

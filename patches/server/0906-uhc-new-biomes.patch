@@ -1,0 +1,82 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: balduvian <emmettglaser@gmail.com>
+Date: Mon, 16 May 2022 15:53:44 -0700
+Subject: [PATCH] uhc-new-biomes
+
+
+diff --git a/src/main/java/net/minecraft/world/level/biome/Biomes.java b/src/main/java/net/minecraft/world/level/biome/Biomes.java
+index d8d0e7a71b9a650e82ef28159be4000d9d3bf04c..578e845c4fb1b5cf5eb95ea4bf9f6b4c498ada65 100644
+--- a/src/main/java/net/minecraft/world/level/biome/Biomes.java
++++ b/src/main/java/net/minecraft/world/level/biome/Biomes.java
+@@ -66,8 +66,70 @@ public abstract class Biomes {
+     public static final ResourceKey<Biome> END_MIDLANDS = register("end_midlands");
+     public static final ResourceKey<Biome> SMALL_END_ISLANDS = register("small_end_islands");
+     public static final ResourceKey<Biome> END_BARRENS = register("end_barrens");
++    
++    public static final ResourceKey<Biome> UHC_THE_VOID = register("uhc_the_void");
++    public static final ResourceKey<Biome> UHC_PLAINS = register("uhc_plains");
++    public static final ResourceKey<Biome> UHC_SUNFLOWER_PLAINS = register("uhc_sunflower_plains");
++    public static final ResourceKey<Biome> UHC_SNOWY_PLAINS = register("uhc_snowy_plains");
++    public static final ResourceKey<Biome> UHC_ICE_SPIKES = register("uhc_ice_spikes");
++    public static final ResourceKey<Biome> UHC_DESERT = register("uhc_desert");
++    public static final ResourceKey<Biome> UHC_SWAMP = register("uhc_swamp");
++    public static final ResourceKey<Biome> UHC_FOREST = register("uhc_forest");
++    public static final ResourceKey<Biome> UHC_FLOWER_FOREST = register("uhc_flower_forest");
++    public static final ResourceKey<Biome> UHC_BIRCH_FOREST = register("uhc_birch_forest");
++    public static final ResourceKey<Biome> UHC_DARK_FOREST = register("uhc_dark_forest");
++    public static final ResourceKey<Biome> UHC_OLD_GROWTH_BIRCH_FOREST = register("uhc_old_growth_birch_forest");
++    public static final ResourceKey<Biome> UHC_OLD_GROWTH_PINE_TAIGA = register("uhc_old_growth_pine_taiga");
++    public static final ResourceKey<Biome> UHC_OLD_GROWTH_SPRUCE_TAIGA = register("uhc_old_growth_spruce_taiga");
++    public static final ResourceKey<Biome> UHC_TAIGA = register("uhc_taiga");
++    public static final ResourceKey<Biome> UHC_SNOWY_TAIGA = register("uhc_snowy_taiga");
++    public static final ResourceKey<Biome> UHC_SAVANNA = register("uhc_savanna");
++    public static final ResourceKey<Biome> UHC_SAVANNA_PLATEAU = register("uhc_savanna_plateau");
++    public static final ResourceKey<Biome> UHC_WINDSWEPT_HILLS = register("uhc_windswept_hills");
++    public static final ResourceKey<Biome> UHC_WINDSWEPT_GRAVELLY_HILLS = register("uhc_windswept_gravelly_hills");
++    public static final ResourceKey<Biome> UHC_WINDSWEPT_FOREST = register("uhc_windswept_forest");
++    public static final ResourceKey<Biome> UHC_WINDSWEPT_SAVANNA = register("uhc_windswept_savanna");
++    public static final ResourceKey<Biome> UHC_JUNGLE = register("uhc_jungle");
++    public static final ResourceKey<Biome> UHC_SPARSE_JUNGLE = register("uhc_sparse_jungle");
++    public static final ResourceKey<Biome> UHC_BAMBOO_JUNGLE = register("uhc_bamboo_jungle");
++    public static final ResourceKey<Biome> UHC_BADLANDS = register("uhc_badlands");
++    public static final ResourceKey<Biome> UHC_ERODED_BADLANDS = register("uhc_eroded_badlands");
++    public static final ResourceKey<Biome> UHC_WOODED_BADLANDS = register("uhc_wooded_badlands");
++    public static final ResourceKey<Biome> UHC_MEADOW = register("uhc_meadow");
++    public static final ResourceKey<Biome> UHC_GROVE = register("uhc_grove");
++    public static final ResourceKey<Biome> UHC_SNOWY_SLOPES = register("uhc_snowy_slopes");
++    public static final ResourceKey<Biome> UHC_FROZEN_PEAKS = register("uhc_frozen_peaks");
++    public static final ResourceKey<Biome> UHC_JAGGED_PEAKS = register("uhc_jagged_peaks");
++    public static final ResourceKey<Biome> UHC_STONY_PEAKS = register("uhc_stony_peaks");
++    public static final ResourceKey<Biome> UHC_RIVER = register("uhc_river");
++    public static final ResourceKey<Biome> UHC_FROZEN_RIVER = register("uhc_frozen_river");
++    public static final ResourceKey<Biome> UHC_BEACH = register("uhc_beach");
++    public static final ResourceKey<Biome> UHC_SNOWY_BEACH = register("uhc_snowy_beach");
++    public static final ResourceKey<Biome> UHC_STONY_SHORE = register("uhc_stony_shore");
++    public static final ResourceKey<Biome> UHC_WARM_OCEAN = register("uhc_warm_ocean");
++    public static final ResourceKey<Biome> UHC_LUKEWARM_OCEAN = register("uhc_lukewarm_ocean");
++    public static final ResourceKey<Biome> UHC_DEEP_LUKEWARM_OCEAN = register("uhc_deep_lukewarm_ocean");
++    public static final ResourceKey<Biome> UHC_OCEAN = register("uhc_ocean");
++    public static final ResourceKey<Biome> UHC_DEEP_OCEAN = register("uhc_deep_ocean");
++    public static final ResourceKey<Biome> UHC_COLD_OCEAN = register("uhc_cold_ocean");
++    public static final ResourceKey<Biome> UHC_DEEP_COLD_OCEAN = register("uhc_deep_cold_ocean");
++    public static final ResourceKey<Biome> UHC_FROZEN_OCEAN = register("uhc_frozen_ocean");
++    public static final ResourceKey<Biome> UHC_DEEP_FROZEN_OCEAN = register("uhc_deep_frozen_ocean");
++    public static final ResourceKey<Biome> UHC_MUSHROOM_FIELDS = register("uhc_mushroom_fields");
++    public static final ResourceKey<Biome> UHC_DRIPSTONE_CAVES = register("uhc_dripstone_caves");
++    public static final ResourceKey<Biome> UHC_LUSH_CAVES = register("uhc_lush_caves");
++    public static final ResourceKey<Biome> UHC_NETHER_WASTES = register("uhc_nether_wastes");
++    public static final ResourceKey<Biome> UHC_WARPED_FOREST = register("uhc_warped_forest");
++    public static final ResourceKey<Biome> UHC_CRIMSON_FOREST = register("uhc_crimson_forest");
++    public static final ResourceKey<Biome> UHC_SOUL_SAND_VALLEY = register("uhc_soul_sand_valley");
++    public static final ResourceKey<Biome> UHC_BASALT_DELTAS = register("uhc_basalt_deltas");
++    public static final ResourceKey<Biome> UHC_THE_END = register("uhc_the_end");
++    public static final ResourceKey<Biome> UHC_END_HIGHLANDS = register("uhc_end_highlands");
++    public static final ResourceKey<Biome> UHC_END_MIDLANDS = register("uhc_end_midlands");
++    public static final ResourceKey<Biome> UHC_SMALL_END_ISLANDS = register("uhc_small_end_islands");
++    public static final ResourceKey<Biome> UHC_END_BARRENS = register("uhc_end_barrens");
+ 
+-    private static ResourceKey<Biome> register(String name) {
++    public static ResourceKey<Biome> register(String name) {
+         return ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(name));
+     }
+ }
