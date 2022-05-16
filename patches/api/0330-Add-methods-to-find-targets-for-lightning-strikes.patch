@@ -5,10 +5,10 @@ Subject: [PATCH] Add methods to find targets for lightning strikes
 
 
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index d149dd1d3d2703a428006e0c3ab5f9251e560882..22191f733bbda0710ffae425fda1861e3c2ec87f 100644
+index 4b4b286e9373da2624a29e17df7e54f5e47c3f7d..2007e09322624184ea35186a9b1c2ee80294a38f 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -759,6 +759,37 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+@@ -760,6 +760,37 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      @NotNull
      public LightningStrike strikeLightningEffect(@NotNull Location loc);
  
