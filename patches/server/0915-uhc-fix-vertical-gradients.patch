@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: balduvian <emmettglaser@gmail.com>
+Date: Tue, 17 May 2022 12:27:00 -0700
+Subject: [PATCH] uhc-fix-vertical-gradients
+
+
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/SurfaceRules.java b/src/main/java/net/minecraft/world/level/levelgen/SurfaceRules.java
+index 2fa903e78c657f36a9deff4f32a7f95598fb15ae..d24171f3fd80ea80b50262d62055b2588384f06c 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/SurfaceRules.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/SurfaceRules.java
+@@ -686,8 +686,8 @@ public class SurfaceRules {
+ 
+         @Override
+         public SurfaceRules.Condition apply(SurfaceRules.Context inContext) {
+-            int i = this.trueAtAndBelow().resolveY(inContext.context);
+-            int j = this.falseAtAndAbove().resolveY(inContext.context);
++            int atAndBelow = this.trueAtAndBelow().resolveY(inContext.context);
++            int falseAndAbove = this.falseAtAndAbove().resolveY(inContext.context);
+             PositionalRandomFactory positionalRandomFactory = inContext.system.getOrCreateRandomFactory(this.randomName());
+ 
+             class VerticalGradientCondition extends SurfaceRules.LazyYCondition {
+@@ -698,12 +698,13 @@ public class SurfaceRules {
+                 @Override
+                 public boolean compute() {
+                     int i = this.context.blockY;
+-                    if (i <= i) {
++                    
++                    if (i <= atAndBelow) {
+                         return true;
+-                    } else if (i >= j) {
++                    } else if (i >= falseAndAbove) {
+                         return false;
+                     } else {
+-                        double d = Mth.map((double)i, (double)i, (double)j, 1.0D, 0.0D);
++                        double d = Mth.map(i, atAndBelow, falseAndAbove, 1.0D, 0.0D);
+                         RandomSource randomSource = positionalRandomFactory.at(this.context.blockX, i, this.context.blockZ);
+                         return (double)randomSource.nextFloat() < d;
+                     }

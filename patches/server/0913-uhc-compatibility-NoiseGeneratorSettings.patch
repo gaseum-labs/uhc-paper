@@ -1,0 +1,57 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: balduvian <emmettglaser@gmail.com>
+Date: Tue, 17 May 2022 11:40:14 -0700
+Subject: [PATCH] uhc-compatibility-NoiseGeneratorSettings
+
+
+diff --git a/src/main/java/net/minecraft/world/level/levelgen/NoiseGeneratorSettings.java b/src/main/java/net/minecraft/world/level/levelgen/NoiseGeneratorSettings.java
+index ecf1e3f65a3796a5c313154046774cbdde879d52..97834e23ea472b6988c3ed10d12ef54552d929ad 100644
+--- a/src/main/java/net/minecraft/world/level/levelgen/NoiseGeneratorSettings.java
++++ b/src/main/java/net/minecraft/world/level/levelgen/NoiseGeneratorSettings.java
+@@ -25,6 +25,46 @@ public class NoiseGeneratorSettings {
+     public boolean oreVeinsEnabled;
+     public boolean useLegacyRandomSource;
+     
++    public NoiseSettings noiseSettings() {
++        return noiseSettings;
++    }
++    
++    public BlockState defaultBlock() {
++        return defaultBlock;
++    }
++    
++    public BlockState defaultFluid() {
++        return defaultFluid;
++    }
++    
++    public NoiseRouterWithOnlyNoises noiseRouter() {
++        return noiseRouter;
++    }
++    
++    public SurfaceRules.RuleSource surfaceRule() {
++        return surfaceRule;
++    }
++    
++    public int seaLevel() {
++        return seaLevel;
++    }
++    
++    public boolean disableMobGeneration() {
++        return disableMobGeneration;
++    }
++    
++    public boolean aquifersEnabled() {
++        return aquifersEnabled;
++    }
++    
++    public boolean oreVeinsEnabled() {
++        return oreVeinsEnabled;
++    }
++    
++    public boolean useLegacyRandomSource() {
++        return useLegacyRandomSource;
++    }
++    
+     public NoiseGeneratorSettings(
+         NoiseSettings noiseSettings,
+         BlockState defaultBlock,
