@@ -1,0 +1,87 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: balduvian <emmettglaser@gmail.com>
+Date: Mon, 16 May 2022 18:16:39 -0700
+Subject: [PATCH] uhc-register-new-biomes
+
+
+diff --git a/src/main/java/net/minecraft/data/worldgen/biome/Biomes.java b/src/main/java/net/minecraft/data/worldgen/biome/Biomes.java
+index b693a292b91e795a2f452b194e341b35f6be1826..88c1026332738c0cebda6ba246f167da6b3840bb 100644
+--- a/src/main/java/net/minecraft/data/worldgen/biome/Biomes.java
++++ b/src/main/java/net/minecraft/data/worldgen/biome/Biomes.java
+@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceKey;
+ import net.minecraft.world.level.biome.Biome;
+ 
+ public abstract class Biomes {
+-    private static void register(ResourceKey<Biome> key, Biome biome) {
++    public static void register(ResourceKey<Biome> key, Biome biome) {
+         BuiltinRegistries.register(BuiltinRegistries.BIOME, key, biome);
+     }
+ 
+@@ -76,5 +76,67 @@ public abstract class Biomes {
+         register(net.minecraft.world.level.biome.Biomes.END_MIDLANDS, EndBiomes.endMidlands());
+         register(net.minecraft.world.level.biome.Biomes.SMALL_END_ISLANDS, EndBiomes.smallEndIslands());
+         register(net.minecraft.world.level.biome.Biomes.END_BARRENS, EndBiomes.endBarrens());
++    
++        register(net.minecraft.world.level.biome.Biomes.UHC_THE_VOID, OverworldBiomes.theVoid());
++        register(net.minecraft.world.level.biome.Biomes.UHC_PLAINS, OverworldBiomes.plains(false, false, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_SUNFLOWER_PLAINS, OverworldBiomes.plains(true, false, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_SNOWY_PLAINS, OverworldBiomes.plains(false, true, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_ICE_SPIKES, OverworldBiomes.plains(false, true, true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_DESERT, OverworldBiomes.desert());
++        register(net.minecraft.world.level.biome.Biomes.UHC_SWAMP, OverworldBiomes.swamp());
++        register(net.minecraft.world.level.biome.Biomes.UHC_FOREST, OverworldBiomes.forest(false, false, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_FLOWER_FOREST, OverworldBiomes.forest(false, false, true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_BIRCH_FOREST, OverworldBiomes.forest(true, false, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_DARK_FOREST, OverworldBiomes.darkForest());
++        register(net.minecraft.world.level.biome.Biomes.UHC_OLD_GROWTH_BIRCH_FOREST, OverworldBiomes.forest(true, true, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_OLD_GROWTH_PINE_TAIGA, OverworldBiomes.oldGrowthTaiga(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_OLD_GROWTH_SPRUCE_TAIGA, OverworldBiomes.oldGrowthTaiga(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_TAIGA, OverworldBiomes.taiga(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_SNOWY_TAIGA, OverworldBiomes.taiga(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_SAVANNA, OverworldBiomes.savanna(false, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_SAVANNA_PLATEAU, OverworldBiomes.savanna(false, true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_WINDSWEPT_HILLS, OverworldBiomes.windsweptHills(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_WINDSWEPT_GRAVELLY_HILLS, OverworldBiomes.windsweptHills(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_WINDSWEPT_FOREST, OverworldBiomes.windsweptHills(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_WINDSWEPT_SAVANNA, OverworldBiomes.savanna(true, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_JUNGLE, OverworldBiomes.jungle());
++        register(net.minecraft.world.level.biome.Biomes.UHC_SPARSE_JUNGLE, OverworldBiomes.sparseJungle());
++        register(net.minecraft.world.level.biome.Biomes.UHC_BAMBOO_JUNGLE, OverworldBiomes.bambooJungle());
++        register(net.minecraft.world.level.biome.Biomes.UHC_BADLANDS, OverworldBiomes.badlands(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_ERODED_BADLANDS, OverworldBiomes.badlands(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_WOODED_BADLANDS, OverworldBiomes.badlands(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_MEADOW, OverworldBiomes.meadow());
++        register(net.minecraft.world.level.biome.Biomes.UHC_GROVE, OverworldBiomes.grove());
++        register(net.minecraft.world.level.biome.Biomes.UHC_SNOWY_SLOPES, OverworldBiomes.snowySlopes());
++        register(net.minecraft.world.level.biome.Biomes.UHC_FROZEN_PEAKS, OverworldBiomes.frozenPeaks());
++        register(net.minecraft.world.level.biome.Biomes.UHC_JAGGED_PEAKS, OverworldBiomes.jaggedPeaks());
++        register(net.minecraft.world.level.biome.Biomes.UHC_STONY_PEAKS, OverworldBiomes.stonyPeaks());
++        register(net.minecraft.world.level.biome.Biomes.UHC_RIVER, OverworldBiomes.river(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_FROZEN_RIVER, OverworldBiomes.river(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_BEACH, OverworldBiomes.beach(false, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_SNOWY_BEACH, OverworldBiomes.beach(true, false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_STONY_SHORE, OverworldBiomes.beach(false, true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_WARM_OCEAN, OverworldBiomes.warmOcean());
++        register(net.minecraft.world.level.biome.Biomes.UHC_LUKEWARM_OCEAN, OverworldBiomes.lukeWarmOcean(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_DEEP_LUKEWARM_OCEAN, OverworldBiomes.lukeWarmOcean(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_OCEAN, OverworldBiomes.ocean(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_DEEP_OCEAN, OverworldBiomes.ocean(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_COLD_OCEAN, OverworldBiomes.coldOcean(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_DEEP_COLD_OCEAN, OverworldBiomes.coldOcean(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_FROZEN_OCEAN, OverworldBiomes.frozenOcean(false));
++        register(net.minecraft.world.level.biome.Biomes.UHC_DEEP_FROZEN_OCEAN, OverworldBiomes.frozenOcean(true));
++        register(net.minecraft.world.level.biome.Biomes.UHC_MUSHROOM_FIELDS, OverworldBiomes.mushroomFields());
++        register(net.minecraft.world.level.biome.Biomes.UHC_DRIPSTONE_CAVES, OverworldBiomes.dripstoneCaves());
++        register(net.minecraft.world.level.biome.Biomes.UHC_LUSH_CAVES, OverworldBiomes.lushCaves());
++        register(net.minecraft.world.level.biome.Biomes.UHC_NETHER_WASTES, NetherBiomes.netherWastes());
++        register(net.minecraft.world.level.biome.Biomes.UHC_WARPED_FOREST, NetherBiomes.warpedForest());
++        register(net.minecraft.world.level.biome.Biomes.UHC_CRIMSON_FOREST, NetherBiomes.crimsonForest());
++        register(net.minecraft.world.level.biome.Biomes.UHC_SOUL_SAND_VALLEY, NetherBiomes.soulSandValley());
++        register(net.minecraft.world.level.biome.Biomes.UHC_BASALT_DELTAS, NetherBiomes.basaltDeltas());
++        register(net.minecraft.world.level.biome.Biomes.UHC_THE_END, EndBiomes.theEnd());
++        register(net.minecraft.world.level.biome.Biomes.UHC_END_HIGHLANDS, EndBiomes.endHighlands());
++        register(net.minecraft.world.level.biome.Biomes.UHC_END_MIDLANDS, EndBiomes.endMidlands());
++        register(net.minecraft.world.level.biome.Biomes.UHC_SMALL_END_ISLANDS, EndBiomes.smallEndIslands());
++        register(net.minecraft.world.level.biome.Biomes.UHC_END_BARRENS, EndBiomes.endBarrens());
+     }
+ }
